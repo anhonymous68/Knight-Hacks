@@ -6,17 +6,29 @@ import android.media.Image;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -32,12 +44,14 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity
 {
 
-    private Socket mSocket;
-    {
-        try {
-            mSocket = IO.socket("http://helloanhhoang.com/");
-        } catch (URISyntaxException e) {}
-    }
+//    private Socket mSocket;
+//    {
+//        try {
+//            mSocket = IO.socket("http://66.96.162.137:21/index.html/");
+//        } catch (URISyntaxException e) {}
+//    }
+
+    EditText editText;
 
     HashMap<Card, Integer> cardMap = new HashMap<>();
     ImageButton buttonStart;
@@ -58,8 +72,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mSocket.connect();
-
+//        mSocket.connect();
+        getData("http://helloanhhoang.com/index.html");
         mapStuff();
         initCard();
         buttonStart.setOnClickListener(new View.OnClickListener()
@@ -78,9 +92,37 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
+//        attemptSend();
     }
 
+    public void getData(String url)
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+//        String url = "http://www.google.com";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                Log.d("AAAA", error.toString());
+
+            }
+        });
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
     private void mapStuff()
     {
         buttonCardShow1 = findViewById(R.id.imageButton_cardShow_1);
@@ -90,6 +132,7 @@ public class MainActivity extends AppCompatActivity
         progressBar = findViewById(R.id.progressBar);
         textViewScore = findViewById(R.id.textViewScore);
         buttonStart = findViewById(R.id.buttonStart);
+        editText= findViewById(R.id.editText);
     }
 
     private void onProgressBarTime()
@@ -114,6 +157,15 @@ public class MainActivity extends AppCompatActivity
         };
         countDownTimer.start();
     }
+
+//    private void attemptSend() {
+//        String message = editText.getText().toString().trim();
+//        if (TextUtils.isEmpty(message)) {
+//            return;
+//        }
+//        editText.setText("");
+//        mSocket.emit("new message", message);
+//    }
 
     public void runCardShow()
     {
@@ -503,5 +555,14 @@ public class MainActivity extends AppCompatActivity
         buttonCardShow4.setVisibility(View.VISIBLE);
 
     }
+
+//    @Override
+//    protected void onDestroy()
+//    {
+//        super.onDestroy();
+//
+//        mSocket.disconnect();
+//
+//    }
 
 }
