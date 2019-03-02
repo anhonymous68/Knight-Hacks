@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -34,6 +36,9 @@ public class MainActivity extends AppCompatActivity
     TextView textViewScore;
     ProgressBar progressBar;
     ArrayList<Card> arrayListCard = new ArrayList<>();
+    ArrayList<Card> fourCardToShow = new ArrayList<>();
+    boolean kickStarted = false;
+    Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,12 +53,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                onProgressBarTime();
-                Collections.shuffle(arrayListCard);
-                buttonCardShow1.setImageBitmap(arrayListCard.get(0).getImage());
-                buttonCardShow2.setImageBitmap(arrayListCard.get(1).getImage());
-                buttonCardShow3.setImageBitmap(arrayListCard.get(2).getImage());
-                buttonCardShow4.setImageBitmap(arrayListCard.get(3).getImage());
+                if (!kickStarted)
+                {
+                    setCardVisible();
+                    onProgressBarTime();
+//                    Collections.shuffle(arrayListCard);
+                    runCardShow();
+                }
+                kickStarted = true;
+
             }
         });
 
@@ -92,6 +100,222 @@ public class MainActivity extends AppCompatActivity
         };
         countDownTimer.start();
     }
+
+    public void runCardShow()
+    {
+
+        Collections.shuffle(arrayListCard);
+        int indexAnswer = random.nextInt(4);
+
+        Card card1 = arrayListCard.get(0);
+        Card card2 = arrayListCard.get(1);
+        Card card3 = arrayListCard.get(2);
+        Card card4 = arrayListCard.get(3);
+
+//        Log.d("AAindex", "Index:  " + indexAnswer);
+        ArrayList<Card> fourCardToChoose = new ArrayList<>();
+
+        fourCardToChoose.add(card1);
+        fourCardToChoose.add(card2);
+        fourCardToChoose.add(card3);
+        fourCardToChoose.add(card4);
+
+        buttonCardShow1.setImageBitmap(card1.getImage());
+        buttonCardShow2.setImageBitmap(card2.getImage());
+        buttonCardShow3.setImageBitmap(card3.getImage());
+        buttonCardShow4.setImageBitmap(card4.getImage());
+
+        for (int i = 0 ; i < fourCardToChoose.size(); i++)
+        {
+            fourCardToShow.add(fourCardToChoose.get(i));
+        }
+        Log.d("AAA", "\n\n\n");
+        fourCardToChoose.remove(indexAnswer);
+        int indexToTen = random.nextInt(3);
+        fourCardToChoose.remove(indexToTen);
+        int sumOfTwoCards = fourCardToChoose.get(0).getCardNum() + fourCardToChoose.get(1).getCardNum();
+        Log.d("AAA", "One card is: " + fourCardToChoose.get(0).getName());
+        Log.d("AAA", "One card is: " + fourCardToChoose.get(1).getName());
+        int numcardNeed;
+
+        if (sumOfTwoCards <= 10)
+        {
+            numcardNeed = 10 - sumOfTwoCards;
+        }
+        else
+        {
+            numcardNeed = 20 - sumOfTwoCards;
+        }
+        if (numcardNeed == 0) numcardNeed = 10;
+
+        Card cardAnswer = getCardByNumber(numcardNeed);
+        fourCardToShow.set(indexAnswer,cardAnswer);
+
+        if (indexAnswer == 0)
+        {
+            buttonCardShow1.setImageBitmap(cardAnswer.getImage());
+        }
+        if (indexAnswer == 1)
+        {
+            buttonCardShow2.setImageBitmap(cardAnswer.getImage());
+        }
+        if (indexAnswer == 2)
+        {
+            buttonCardShow3.setImageBitmap(cardAnswer.getImage());
+        }
+        if (indexAnswer == 3)
+        {
+            buttonCardShow4.setImageBitmap(cardAnswer.getImage());
+        }
+
+        Log.d("AAA", "Card to choose:  " + cardAnswer.getName());
+        Log.d("AAA", "Card Number to choose:  " + indexAnswer);
+        onClickCard1();
+        onClickCard2();
+        onClickCard3();
+        onClickCard4();
+    }
+
+    public Card getCardByNumber(int num)
+    {
+        for (int i = 0; i < arrayListCard.size();i++)
+        {
+            if (arrayListCard.get(i).getCardNum() == num)
+                return arrayListCard.get(i);
+        }
+        return null;
+    }
+
+    public void onClickCard1()
+    {
+        buttonCardShow1.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Card cardChose = fourCardToShow.get(0);
+                if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(2).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                fourCardToShow.clear();
+                runCardShow();
+            }
+
+        });
+    }
+
+    public void onClickCard2()
+    {
+        buttonCardShow2.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Card cardChose = fourCardToShow.get(1);
+//                Log.d("AAA", "Button CardToShowWhenChoose:  " + fourCardToShow.size());
+                if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(2).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                fourCardToShow.clear();
+                runCardShow();
+            }
+        });
+    }
+
+    public void onClickCard3()
+    {
+        buttonCardShow3.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Card cardChose = fourCardToShow.get(2);
+                if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(1).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                fourCardToShow.clear();
+                runCardShow();
+            }
+        });
+    }
+
+    public void onClickCard4()
+    {
+        buttonCardShow4.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Card cardChose = fourCardToShow.get(0);
+                if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(1).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                else if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
+                {
+                    int score = Integer.parseInt(textViewScore.getText().toString());
+                    score++;
+                    textViewScore.setText(Integer.toString(score));
+                }
+                fourCardToShow.clear();
+                runCardShow();
+            }
+        });
+    }
+
 
     public void initCard()
     {
@@ -267,5 +491,25 @@ public class MainActivity extends AppCompatActivity
             Map.Entry pair = (Map.Entry)it.next();
             arrayListCard.add((Card) pair.getKey());
         }
+//        Collections.shuffle(arrayListCard);
+//        buttonCardShow1.setImageBitmap(arrayListCard.get(0).getImage());
+//        buttonCardShow2.setImageBitmap(arrayListCard.get(1).getImage());
+//        buttonCardShow3.setImageBitmap(arrayListCard.get(2).getImage());
+//        buttonCardShow4.setImageBitmap(arrayListCard.get(3).getImage());
+        buttonCardShow1.setVisibility(View.INVISIBLE);
+        buttonCardShow2.setVisibility(View.INVISIBLE);
+        buttonCardShow3.setVisibility(View.INVISIBLE);
+        buttonCardShow4.setVisibility(View.INVISIBLE);
+
     }
+
+    public void setCardVisible()
+    {
+        buttonCardShow1.setVisibility(View.VISIBLE);
+        buttonCardShow2.setVisibility(View.VISIBLE);
+        buttonCardShow3.setVisibility(View.VISIBLE);
+        buttonCardShow4.setVisibility(View.VISIBLE);
+
+    }
+
 }
