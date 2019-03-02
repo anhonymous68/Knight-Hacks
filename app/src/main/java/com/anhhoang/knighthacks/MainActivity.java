@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity
         buttonCardShow3.setImageBitmap(card3.getImage());
         buttonCardShow4.setImageBitmap(card4.getImage());
 
+        fourCardToShow.clear();
+
         for (int i = 0 ; i < fourCardToChoose.size(); i++)
         {
             fourCardToShow.add(fourCardToChoose.get(i));
@@ -170,10 +172,20 @@ public class MainActivity extends AppCompatActivity
 
         Log.d("AAA", "Card to choose:  " + cardAnswer.getName());
         Log.d("AAA", "Card Number to choose:  " + indexAnswer);
+        for (int i = 0 ; i< fourCardToShow.size(); i++)
+        {
+            int a = i + 1;
+            Log.d("showFourCard", "Before Calling click function Card Number " + a + ":  "+ fourCardToShow.get(i).getName());
+        }
         onClickCard1();
         onClickCard2();
         onClickCard3();
         onClickCard4();
+        for (int i = 0 ; i< fourCardToShow.size(); i++)
+        {
+            int a = i + 1;
+            Log.d("showFourCard", "After calling click function Card Number " + a + ":  "+ fourCardToShow.get(i).getName());
+        }
     }
 
     public Card getCardByNumber(int num)
@@ -194,25 +206,16 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 Card cardChose = fourCardToShow.get(0);
-                if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
+
+                if ((fourCardToShow.get(1).getCardNum() + fourCardToShow.get(2).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
                 {
+                    Log.d("AAAA", "Correct!");
                     int score = Integer.parseInt(textViewScore.getText().toString());
                     score++;
                     textViewScore.setText(Integer.toString(score));
                 }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
-                {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(2).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
-                {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                fourCardToShow.clear();
+
+//                fourCardToShow.clear();
                 runCardShow();
             }
 
@@ -227,26 +230,15 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 Card cardChose = fourCardToShow.get(1);
-//                Log.d("AAA", "Button CardToShowWhenChoose:  " + fourCardToShow.size());
-                if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
+
+                if ( (fourCardToShow.get(0).getCardNum() + fourCardToShow.get(2).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
                 {
+                    Log.d("AAAA", "Correct!");
                     int score = Integer.parseInt(textViewScore.getText().toString());
                     score++;
                     textViewScore.setText(Integer.toString(score));
                 }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
-                {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(2).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
-                {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                fourCardToShow.clear();
+//                fourCardToShow.clear();
                 runCardShow();
             }
         });
@@ -260,25 +252,21 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 Card cardChose = fourCardToShow.get(2);
-                if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(1).getCardNum()) % 10 == 0)
+//                for (int i = 0 ; i< fourCardToShow.size(); i++)
+//                {
+//                    int a = i + 1;
+//                    Log.d("showFourCard", "Card Number " + a + ":  "+ fourCardToShow.get(i).getName());
+//                    Log.d("showFourCard","\n When calling Card Value  " + fourCardToShow.get(i).getCardNum());
+//
+//                }
+                if (( fourCardToShow.get(1).getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
                 {
+                    Log.d("AAAA", "Correct!");
                     int score = Integer.parseInt(textViewScore.getText().toString());
                     score++;
                     textViewScore.setText(Integer.toString(score));
                 }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
-                {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(3).getCardNum()) % 10 == 0)
-                {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                fourCardToShow.clear();
+//                fourCardToShow.clear();
                 runCardShow();
             }
         });
@@ -291,21 +279,11 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Card cardChose = fourCardToShow.get(0);
-                if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(1).getCardNum()) % 10 == 0)
+                Card cardChose = fourCardToShow.get(3);
+
+                if (( + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(2).getCardNum() + fourCardToShow.get(0).getCardNum()) % 10 == 0)
                 {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(0).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
-                {
-                    int score = Integer.parseInt(textViewScore.getText().toString());
-                    score++;
-                    textViewScore.setText(Integer.toString(score));
-                }
-                else if ((cardChose.getCardNum() + fourCardToShow.get(1).getCardNum() + fourCardToShow.get(2).getCardNum()) % 10 == 0)
-                {
+                    Log.d("AAAA", "Correct!");
                     int score = Integer.parseInt(textViewScore.getText().toString());
                     score++;
                     textViewScore.setText(Integer.toString(score));
