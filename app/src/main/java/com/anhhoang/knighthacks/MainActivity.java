@@ -15,7 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
 import java.io.File;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +31,14 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
 {
+
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket("http://helloanhhoang.com/");
+        } catch (URISyntaxException e) {}
+    }
+
     HashMap<Card, Integer> cardMap = new HashMap<>();
     ImageButton buttonStart;
     ImageButton buttonCardShow1;
@@ -45,6 +57,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSocket.connect();
 
         mapStuff();
         initCard();
